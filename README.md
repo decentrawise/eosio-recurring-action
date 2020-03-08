@@ -3,7 +3,7 @@ A base class that makes an action recurring with a defined interval delay for EO
 
 ## How it works
 
-The only thing needed is to plug the recurring_action header file and the base class on your contract code, specifying the sender id for the deferred transaction, the delay between calls and the action you want to recur. Then your contract will have that action being called with **at least** that interval.
+The only thing needed is to plug the recurring_action header file and the base class on your contract code, specifying the owner for the deferred transaction, the delay between calls and the action you want to recur. Then your contract will have that action being called with **at least** that interval.
 
 ```
 #include "recurring_action.hpp"
