@@ -33,8 +33,8 @@ describe("Test profile contract", function (eoslime) {
         profileUser2 = accounts[1];
 
         // Print accounts
-        console.log('profile user 1:', profileUser1.name);
-        console.log('profile user 2:', profileUser2.name);
+        // console.log('profile user 1:', profileUser1.name);
+        // console.log('profile user 2:', profileUser2.name);
 
         /*
             CleanDeployer creates for you a new account behind the scene
@@ -57,7 +57,7 @@ describe("Test profile contract", function (eoslime) {
         let tx = await profileContract.update(profileUser1.name, userprofile1.nickname, userprofile1.avatar, userprofile1.website,
                                               userprofile1.locale, userprofile1.metadata, {from: profileUser1});
 
-        console.log(tx.processed.action_traces[0].console);
+        // console.log(tx.processed.action_traces[0].console);
 
         let profileData = await profileContract.profiles.equal(profileUser1.name).find();
 
@@ -74,7 +74,7 @@ describe("Test profile contract", function (eoslime) {
         let tx = await profileContract.update(profileUser2.name, userprofile2.nickname, userprofile2.avatar, userprofile2.website,
                                               userprofile2.locale, userprofile2.metadata, {from: profileUser2});
 
-        console.log(tx.processed.action_traces[0].console);
+        // console.log(tx.processed.action_traces[0].console);
 
         let profileData = await profileContract.profiles.equal(profileUser2.name).find();
 

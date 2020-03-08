@@ -5,8 +5,8 @@
 #include "../../src/recurring_action.hpp"
 
 
-#define RECURRING_SENDERID eosio::name("profilecount").value
-#define RECURRING_ACTION eosio::name("count")
+// #define RECURRING_ACTION eosio::name("count")
+#define RECURRING_ACTION eosio::name("tick")
 #define RECURRING_DELAYSEC 1
 
 class [[eosio::contract]] profile: public eosio::contract,
@@ -16,7 +16,7 @@ public:
 
   profile(eosio::name receiver, eosio::name code, eosio::datastream<const char*> ds) :
     contract(receiver, code, ds),
-    recurring_action(receiver, RECURRING_SENDERID, RECURRING_DELAYSEC, RECURRING_ACTION)
+    recurring_action(receiver, RECURRING_DELAYSEC, RECURRING_ACTION)
   {}
 
   [[eosio::action]]
@@ -64,9 +64,21 @@ public:
     profiles_table profiles(_self, _self.value);
     auto iterator = profiles.begin();
     eosio::check(iterator != profiles.end(), "No user profiles yet");
+    // limit to 20 to check that an assert in the recurring action doesn't break the chain...
+    eosio::check(iterator->count < 20, "Limit of 20 reached");
     profiles.modify(iterator, eosio::same_payer, [&](auto & row) {
       row.count++;
     });
+  }
+
+  // the purpose of this action is just to post a new deferred tx for the count action,
+  // that might fail and should not break the chain of deferred tx of recurring_action.
+  // this is an example of use to avoid interruptions on the recurring action calling, and
+  // also as a safe way to prevent from having to pay CPU for actions that didn't do any
+  // changes to state... this way the action can simply assert and the recurrence continues
+  [[eosio::action]]
+  void tick() {
+    call_action(eosio::name("count"));
   }
 
   // NOTE: be careful with notifications on the main class, or any other base class,

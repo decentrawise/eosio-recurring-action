@@ -16,7 +16,7 @@ public:
 
   profile(eosio::name receiver, eosio::name code, eosio::datastream<const char*> ds) :
     contract(receiver, code, ds),
-    recurring_action(receiver, RECURRING_SENDERID, RECURRING_DELAYSEC, RECURRING_ACTION)
+    recurring_action(receiver, RECURRING_DELAYSEC, RECURRING_ACTION)
   {}
 
   [[eosio::action]]
@@ -28,6 +28,10 @@ With this, every time an action is called a new deferred transaction is sent and
 It is advised to also call the recurring action on any other action, perhaps by an inline action, if the desired is to execute **at most** with delay intervals. Without that the standard behaviour is only deliver the delay without any contract iteractions, so the delay is an **at least** interval and might be more extended when contract iteractions occur.
 
 **NOTE:** be careful with notifications on the main class, or any other contract class, as they might be called very often and can delay the execution of the recurring action.
+
+## Actions that can fail/assert
+
+If your recurring tx needs to have checks or asserts, then it is advised to use `call_action()` function to delegate code that can fail to another deferred tx, so that the recurring tx never fails and so it never breaks the recurring chain. You can check how to do this in the test contract, look for action `tick`.
 
 ## File tree
 
