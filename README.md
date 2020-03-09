@@ -5,23 +5,23 @@ A base class that makes an action recurring with a defined interval delay for EO
 
 The only thing needed is to plug the recurring_action header file and the base class on your contract code, specifying the owner for the deferred transaction, the delay between calls and the action you want to recur. Then your contract will have that action being called with **at least** that interval.
 
-```
-#include "recurring_action.hpp"
+<pre>
+<b>#include "recurring_action.hpp"</b>
 
-class [[eosio::contract]] profile: public eosio::contract, recurring_action {
+class [[eosio::contract]] profile: public eosio::contract, <b>recurring_action</b> {
 
   ...
 
 public:
 
-  profile(eosio::name receiver, eosio::name code, eosio::datastream<const char*> ds) :
+  profile(eosio::name receiver, eosio::name code, eosio::datastream&lt;const char*&gt; ds) :
     contract(receiver, code, ds),
-    recurring_action(receiver, RECURRING_DELAYSEC, RECURRING_ACTION)
+    <b>recurring_action(receiver, RECURRING_DELAYSEC, RECURRING_ACTION)</b>
   {}
 
   [[eosio::action]]
   void ...
-```
+</pre>
 
 With this, every time an action is called a new deferred transaction is sent and the old one is cancelled, if any, creating a recurring loop... Please refer to the included test contract for a complete working example.
 
